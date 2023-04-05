@@ -1,7 +1,7 @@
 class LinkedListNode {
   constructor(data, next) {
     this.data = data;
-    this.next = next;
+    this.next = next;   //null ?
   }
 }
 
@@ -24,40 +24,51 @@ class LinkedList {
     }
     this.size++;
   }
-  
 
-  remove(data) {
+
+  remove(key) {    //data or key?
     let currentNode = this.head;
-    let previo = null;
-  
-    while (currentNode != null) {
-      if (currentNode.data === data) {
-        if (!previo) {
-          this.head = currentNode.next;
-        } else {
-          previo.next = currentNode.next;
-        }
-        previo = currentNode;
+    let prevNode;
+    let now = false;
+    let nextNode = currentNode?.next;
+
+    while (currentNode && !now) {
+      now = key === currentNode.data.key; //checar ???
+
+      if (now) {
+        now = true;
+      } else {
+        prevNode = currentNode;
+        currentNode = prevNode?.next;
+        nextNode = prevNode?.next?.next;
+      }
+    }
+    if (now) {
+      this.size = this.size - 1;
+    }
+    if (now && prevNode) {
+      prevNode.next = nextNode;
+    } else if (now && !prevNode) {
+      this.head = nextNode;
+    } else {
+      console.log('not round');
+    }
+
+  }
+
+  contains(key) {
+    let currentNode = this.head;
+    while (currentNode) {
+      let itIsHere = currentNode.data.key === key;
+
+      if (itIsHere) {
+        return currentNode.data;
+      } else {
         currentNode = currentNode.next;
       }
-      this.size--;
-      return currentNode.data;
     }
     return null;
   }
-  
-
-  contains(data) {
-    let currentNode = this.head;
-    while (currentNode != null) {
-      if (currentNode.data === data) {
-        return true;
-      }
-      currentNode = currentNode.next;
-    }
-    return false;
-  }
-
 
   toString() {
     let result = "";
@@ -72,14 +83,28 @@ class LinkedList {
 }
 
 
+
+
 /* 
-let linkedList = new LinkedList();
-linkedList.insert(5);
-linkedList.insert(10);
-linkedList.insert(14);
-console.log(linkedList.toString()); // "5 10 14 null"
-console.log(linkedList.contains(10)); // true
-console.log(linkedList.contains(20)); // false
-linkedList.remove(10);
-console.log(linkedList.toString()); // "5 14 null"
+// to compare
+remove(data) {
+  let currentNode = this.head;
+  let prevNode = null;
+
+  while (currentNode !== null) {
+    if (currentNode.data === data) {
+      if (prevNode === null) {
+        this.head = currentNode.next;
+      } else {
+        prevNode.next = currentNode.next;
+      }
+      this.size--;
+      return currentNode.data;
+    }
+    prevNode = currentNode;
+    currentNode = currentNode.next;
+  }
+  return null;
+}
+
  */
